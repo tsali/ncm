@@ -1,0 +1,43 @@
+#!/bin/sh
+####################################
+# James Washington                 #
+# 2019/05/28                       #
+# Made when I had like 5 minutes   #
+# of downtime and heard someone    #
+# else asking if there was an      #
+# easier way to get back-up configs#
+# for devices we have backed up in #
+# a linux script server within my  #
+# emplyoers internal  network      #
+# This of course requires a mail   #
+# server to be actively built into #
+# the linux box in question        #
+####################################
+
+# This is the version where the you have to SCP to the remote server the back-ups are on and copy to your local server
+
+# Collect Login and filename
+echo ''
+echo 'This is a simple tool to attempt to pull a device config
+from the back-up server, and E-Mail it to you'
+echo ''
+read -p "Remote backup Server: " REMOTE
+read -p "Remote Username: " USERNAME
+read -p "Email: " EMAIL
+read -p "Hostname: " HOSTNAME
+echo ''
+echo 'Connecting to Back-up Server... Please enter password when prompted'
+echo ''
+
+#converting the HOSTNAME to all lowercase to match how the Network Content Manager  dumps are pulled
+FILE=$(echo $HOSTNAME | awk '{print tolower($0)}') > /dev/null 2>&1
+
+#SCP to the Back-up server, copy the back-up configuration over to the local user, E-mail to the user
+scp $USERNAME@$REMOTE:/opt/ncm/ALL/$FILE ~/$FILE.txt
+mail -s ""$FILE" Full Config" -a ~/$FILE.txt $EMAIL <<< 'Full Config for '$FILE'' > /dev/null 2>&1
+# This line removes the file we copied to our local directory, this can be removed or commented out if you wish to keep a local copy for future use
+rm ~/$FILE.txt
+echo ''
+echo 'If the device config is backed up, '$FILE.txt 'Should be arriving to '$EMAIL' briefly'
+echo ''
+

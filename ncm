@@ -1,0 +1,38 @@
+#!/bin/sh
+####################################
+# James Washington                 #
+# 2019/05/28                       #
+# Made when I had like 5 minutes   #
+# of downtime and heard someone    #
+# else asking if there was an      #
+# easier way to get back-up configs#
+# for devices we have backed up in #
+# a linux script server within my  #
+# emplyoers internal  network      #
+# This of course requires a mail   #
+# server to be actively built into #
+# the linux box in question        #
+####################################
+
+# This is the version where the person is logged into the back-up server
+
+# Asks user for an E-Mail to send the backup config to and the hostname of that device
+echo ''
+echo 'This is a simple tool to attempt to pull a device config
+from the back-up server then E-Mails it to you'
+echo ''
+read -p "Email: " EMAIL
+read -p "Hostname: " HOSTNAME
+echo ''
+
+# converting the HOSTNAME to all lowercase to match how the Network Content Manager dumps are pulled
+FILE=$(echo $HOSTNAME | awk '{print tolower($0)}') > /dev/null 2>&1
+
+# We copy the file over to the local users home directory then E-Mail it to the E-Mail address provided
+# Update the approriate back-up locations and local users location (IE ~/$USER) to whatever they should be
+cp /opt/ncm/ALL/$FILE /import/home/$USER/$FILE.txt
+mail -s ""$FILE" Full Config" -a ~/$USER/$FILE.txt $EMAIL <<< 'Full Config for '$FILE'' > /dev/null 2>&1
+rm ~/$USER/$FILE.txt
+echo $FILE.txt 'Should be arriving to '$EMAIL' briefly'
+echo ''
+
