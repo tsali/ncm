@@ -11,14 +11,14 @@ This is a simple script that e-mails a device config that exists in the NCM fold
 
 To install
 1. Log into the linux server you're installing it in
-2. git clone https://
+2. git clone https://github.com/tsali/ncm.git
 3. cd into the ncm directroy
-4. chmod +x ncm && chmod +x ncm-scp
+4. chmod +x nc*
 4. use from within the ncm directory (IE ./ncm ./ncm-scp or bash ncm) or copy to /bin or /usr/bin as necessary
 
 For the copy/paste inclined:
 
 ```
-git clone https://
+git clone https://github.com/tsali/ncm.git && cd ncm && chmod +x nc*
 ```
 
